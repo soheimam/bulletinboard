@@ -12,8 +12,9 @@
         <table>
                 <% for(var i=0; i < data.length; i++) { %>
                    <tr>
-                     <td><%= data[i].title %></td>
-                     <td><%= data[i].body %></td>
+                     <td>Author: <%= data[i].email %></td>
+                     <td>Message: <%= data[i].message %></td>
+                     <td>Leave comment <a href="/comment/<%= data[i].id %>"</td>
                    </tr>
                 <% } %>
                 </table>

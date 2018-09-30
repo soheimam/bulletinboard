@@ -1,0 +1,10 @@
+{
+  "database":"blog_app",
+  "username":"fruit_app",
+  "password":"superpassword",
+  "options": {
+    "operatorsAliases": false,
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}

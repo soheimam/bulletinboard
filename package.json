@@ -9,8 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.1",
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "sequelize": "^4.39.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }

@@ -11,13 +11,12 @@
         <div class="container">
 
             <!-- title and body form with post attr -->
-            <form name="newmsg" method="POST" action="/messages">
-          
+            <form name="newmsg" method="POST" action="/messages/<%= email %>">
+
                   <h1>Post a message</h1>
-                  <input type="text" name="title" value="Name">
                   <br>
                   Message<br>
-                  <textarea name="body" value="Write message here"></textarea>
+                  <textarea name="message" value="Write message here"></textarea>
                   <br><br>
                   <button type="submit"> Save</button>
             
