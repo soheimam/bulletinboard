@@ -8,18 +8,24 @@
     <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 <body>
-  <div class="container">
-        <table>
+
+        
                 <% for(var i=0; i < data.length; i++) { %>
-                   <tr>
-                     <td>Author: <%= data[i].email %></td>
-                     <td>Message: <%= data[i].message %></td>
-                     <td>Leave comment <a href="/comment/<%= data[i].id %>"</td>
-                   </tr>
+
+                <div class="paragraph">
+                  Give me attention or face the wrath of my claws jump around on couch, meow constantly until given food, carefully drink from water glass and then spill it everywhere and proceed to lick the puddle, yet run up and down stairs instantly break out into full speed gallop across the house for no reason knock dish off table head butt cant eat out of my own dish chase imaginary bugs. Eat and than sleep on your face lies down groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked kitty kitty yet if it smells like fish eat as much as you wish but have my breakfast spaghetti yarn. Lie on your belly and purr when you are asleep hide from vacuum cleaner. While happily ignoring when being called fight an alligator and win. Eat too much then proceed to regurgitate all over living room carpet while humans eat dinner i'm bored inside, let me out i'm lonely outside, let me in i can't make up my mind whether to go in or out, guess i'll just stand partway in and partway out, contemplating the universe for half an hour how dare you nudge me with your foot?!?! leap into the air in greatest offense!.
+                </div>
+
+                <div class="author"> Written by  </div>
+
+                <textarea rows="4" cols="50"> </textarea>
+
+                <button type="submit"> Register </button>
+
                 <% } %>
-                </table>
+ 
                 
-              </div>
+
               <div class="center">
               <a href="/"> Back</a>
             </div>
