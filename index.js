@@ -3,8 +3,16 @@ const bodyParser = require('body-parser')
 const database = require('./database.js')
 const express = require('express')
 const bcrypt = require('bcrypt');
+const session = require('express-session')
 
 const app = express()
+
+app.use(session({
+  secret: 'lionel hutz',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
 
 app.use(express.static('views'))
 
@@ -15,7 +23,10 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'ejs')
 
 app.get('/', (request, response) => {
-  response.render('home', {
+  if (request.session.username) {
+    response.redirect('/home')
+  }
+  response.render('login', {
     username: null
   })
 })
@@ -37,8 +48,8 @@ app.post('/register', (request, response) => {
     bcrypt.hash(password, salt, (err, hash) => {
       database.postUserData(username, email, hash, (err, data) => {
         if (err) throw err;
-
-        response.render('login', {
+        request.session.username = username
+        response.render('home', {
           username: username
         })
       })
@@ -47,10 +58,21 @@ app.post('/register', (request, response) => {
 });
 
 app.get('/login', (request, response) => {
+  if (request.session.username){
+    response.redirect('/home')
+  }
+  response.render('login')
+})
+
+app.get('/home', (request, response) => {
+  if (request.session.username){
+    response.redirect('/home')
+  }
   response.render('login')
 })
 
 app.get('/logout', (request, response) => {
+  request.session.username = null
   response.redirect('/login')
 })
 
@@ -63,35 +85,57 @@ app.post('/login', (request, response) => {
   database.getUserData(password, email, (err, user) => {
     if (err) throw err;
     if (user.response === 200) {
+      request.session.username = user.username
+      request.session.email = user.email
+      const session = request.session
+      console.log(session)
       return response.render('home', {
         username: user.username,
         email: user.email
       })
     }
-    response.render('error')
+    response.redirect('/login')
   })
 });
 
-app.post('/messages/:email', (request, response, next) => {
+app.get('/post', (request, response, next) => {
+  response.render('post')
+});
+
+app.get('/post/:id', (request, response, next) => {
+  response.render('comment', {
+    commentId: request.params.id
+  })
+});
+
+app.post('/post/:id', (request, response, next) => {
   const {
+    comment
+  } = request.body;
+
+  const id = request.params.id
+
+  database.postCommentData(id, comment, (err, data) => {
+    if (err) throw err;
+    response.redirect('/messages')
+  })
+});
+
+app.post('/post', (request, response) => {
+  const {
+    title,
     message
   } = request.body;
 
-  const emailAddress = request.params.email
+  const username = request.session.username
 
-  database.postMessageData(emailAddress, message, (err, data) => {
+  database.postMessageData(username, message, title, (err, data) => {
     if (err) throw err;
     response.redirect('/messages')
   })
 });
 
 app.get('/messages', (request, response) => {
-  if (request.query.post) {
-    return response.render('index', {
-      email: request.query.email
-    })
-    
-  }
   database.getAllMessageData((err, data) => {
     if (err) throw err;
     const messages = data.map(msg => msg)

@@ -1,5 +1,6 @@
 const { Client } = require('pg')
-const { Message, User } = require('./migrations/init')
+const sequelize = require('sequelize')
+const { Message, User } = require('./migrations/migration')
 const bcrypt = require('bcrypt')
 
 const client = new Client({
@@ -18,20 +19,19 @@ function getUserData(password, email, callback) {
       email: email
     }
   }).then(user => {
-    if (!user.email) {
+    if (!user) {
       return callback(null, {
         response: 404
       })
     }
     bcrypt.compare(password, user.password, (err, res) => {
-      if(err) {
+      if (err) {
         callback(err);
       }
       if (res == true) {
         return callback(null, {
           response: 200,
-          username: user.username,
-          email: user.email
+          username: user.username
         })
       }
       return callback(null, {
@@ -41,8 +41,28 @@ function getUserData(password, email, callback) {
   })
 }
 
-function postMessageData(email, message, callback) {
-  Message.insertOrUpdate({email: email, message: message})
+function postCommentData(id, comment, callback) {
+  Message.update({
+      'comments': sequelize.fn('array_append', sequelize.col('comments'), comment)
+    }, {
+      'where': {
+        'id': id
+      }
+    })
+    .then(data => {
+      callback(null, data)
+    })
+    .catch(err => {
+      callback(err, null)
+    })
+}
+
+function postMessageData(username, message, title, callback) {
+  Message.insertOrUpdate({
+      username: username,
+      message: message,
+      title: title
+    })
     .then(data => {
       callback(null, data)
     })
@@ -53,27 +73,27 @@ function postMessageData(email, message, callback) {
 
 function getMessageData(username, callback) {
   Message.findAll({
-    where: {
-      username: username
-    }
-  })
-  .then(data => {
-    callback(null, data)
-  })
-  .catch(err => {
-    callback(err)
-  })
+      where: {
+        username: username
+      }
+    })
+    .then(data => {
+      callback(null, data)
+    })
+    .catch(err => {
+      callback(err)
+    })
 }
 
 function getAllMessageData(callback) {
   Message.findAll({})
-  .then(data => {
-    console.log(data)
-    callback(null, data)
-  })
-  .catch(err => {
-    callback(err)
-  })
+    .then(data => {
+      console.log(data)
+      callback(null, data)
+    })
+    .catch(err => {
+      callback(err)
+    })
 }
 
 function postUserData(username, email, password, callback) {
@@ -92,6 +112,7 @@ function postUserData(username, email, password, callback) {
 module.exports = {
   postUserData,
   postMessageData,
+  postCommentData,
   getUserData,
   getAllMessageData,
   getMessageData

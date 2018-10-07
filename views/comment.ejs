@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/style.css" type="text/css">
+    </head>
+    <body>
+        <div class="container">
+
+            <!-- title and body form with post attr -->
+            <form name="newcomment" method="POST" action="/post/<%= commentId %>">
+
+                  <h1>Post a comment</h1>
+                  <br>
+                  Comment:<br>
+                  <textarea name="comment" value="Write comment here"></textarea>
+                  <br><br>
+                  <button type="submit"> Save</button>
+            
+              </form>
+              
+
+        </div>
+    </body>
+</html>

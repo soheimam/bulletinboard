@@ -5,8 +5,8 @@ html,body{
 body{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size:18px;
-    background: #2E3740;
-    color: #435160;
+    /* background: #2E3740;
+    color: #435160; */
 }
 
 .container{
