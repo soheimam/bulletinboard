@@ -26,7 +26,7 @@ app.get('/', (request, response) => {
   if (request.session.username) {
     response.redirect('/home')
   }
-  response.render('login', {
+  response.render('home', {
     username: null
   })
 })
@@ -136,6 +136,14 @@ app.post('/post', (request, response) => {
 });
 
 app.get('/messages', (request, response) => {
+  if (request.query.username) {
+    database.getMessageData(request.query.username, (err, data) => {
+      if (err) throw err;
+      const messages = data.map(msg => msg)
+      response.render('messages', {data: messages})
+      return
+    })
+  }
   database.getAllMessageData((err, data) => {
     if (err) throw err;
     const messages = data.map(msg => msg)
