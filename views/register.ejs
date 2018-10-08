@@ -9,22 +9,31 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <div class="container">
             <form name="register" method="POST" action="/register">
-          
+                <ul class="flex-outer">
                   <h1>Register</h1>
-                  Name:<br>
-                  <input type="text" name="username" required>
-                  <br>Email:<br>
+                    <li>
+                  <label for ="name">Name:</label>
+                  <input type="text" name="username"  placeholder ="Enter name here"required>
+                    </li>
+
+                    <li>
+                  <label for="email" placeholder ="Enter email here">Email:</label>
                   <input type="email" name="email" required>
-                  <br>Password:<br>
+                  </li>
+
+                  <li>
+                  <label for ="password">Password:</label>
                   <input type="password" name="password" minlength="6" required>
-                  <br><br>
+                  </li>
+                 
                   <button type="submit"> Register </button>
-              </form>
+                </ul>
+                </form>
 
         </div>
     </body>

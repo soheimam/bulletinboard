@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <div class="container">
             <form name="login" method="POST" action="/login">
+                <ul class="flex-outer">
                   <h1>Login</h1>
-                  <h2>Email</h2><br>
+                  <li>
+                  <label for="email">Email</label>
                   <input type="email" name="email" required>
-                  <h2>Password</h2><br>
-                    <br> <input type="password" name="password" minlength="6" required>
-                  <br><br>
+                    </li>
+                    <li>
+                  <label for="password">Password</label>
+                    <input type="password" name="password" minlength="6" required>
+                </li>
+                
                   <button type="submit"> Login</button>
-              </form>
+                </ul>
+                </form>
             </div>
-        
-        <script src="" async defer></script>
     </body>
 </html>
