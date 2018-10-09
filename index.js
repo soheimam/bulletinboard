@@ -4,14 +4,16 @@ const database = require('./database.js')
 const express = require('express')
 const bcrypt = require('bcrypt');
 const session = require('express-session')
-
+const { check, validationResult } = require('express-validator/check');
 const app = express()
 
 app.use(session({
   secret: 'lionel hutz',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: {
+    secure: false
+  }
 }))
 
 app.use(express.static('views'))
@@ -25,6 +27,7 @@ app.set('view engine', 'ejs')
 app.get('/', (request, response) => {
   if (request.session.username) {
     response.redirect('/home')
+    return
   }
   response.render('home', {
     username: null
@@ -34,13 +37,22 @@ app.get('/', (request, response) => {
 app.get('/register', (request, response) => {
   response.render('register')
 })
-app.post('/register', (request, response) => {
-
+app.post('/register',[
+  // email must be an email
+  check('email').isEmail(),
+  // password must be at least 6 chars long
+  check('password').isLength({ min: 7 })
+], (request, response) => {
+  const errors = validationResult(request);
+  if (!errors.isEmpty()) {
+    return response.status(422).json({ errors: errors.array() });
+  }
   const {
     username,
     email,
     password
   } = request.body;
+
   const saltRounds = 10;
 
   bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -58,22 +70,27 @@ app.post('/register', (request, response) => {
 });
 
 app.get('/login', (request, response) => {
-  if (request.session.username){
+  if (request.session.username) {
     response.redirect('/home')
+    return
   }
   response.render('login')
 })
 
 app.get('/home', (request, response) => {
-  if (request.session.username){
-    response.redirect('/home')
+  if (!request.session.username) {
+    response.render('login')
+    return
   }
-  response.render('login')
+  response.render('home', {
+    username: request.session.username
+  })
 })
 
 app.get('/logout', (request, response) => {
   request.session.username = null
   response.redirect('/login')
+  return
 })
 
 app.post('/login', (request, response) => {
@@ -95,6 +112,7 @@ app.post('/login', (request, response) => {
       })
     }
     response.redirect('/login')
+    return
   })
 });
 
@@ -118,6 +136,7 @@ app.post('/post/:id', (request, response, next) => {
   database.postCommentData(id, comment, (err, data) => {
     if (err) throw err;
     response.redirect('/messages')
+    return
   })
 });
 
@@ -132,6 +151,7 @@ app.post('/post', (request, response) => {
   database.postMessageData(username, message, title, (err, data) => {
     if (err) throw err;
     response.redirect('/messages')
+    return
   })
 });
 
@@ -140,15 +160,20 @@ app.get('/messages', (request, response) => {
     database.getMessageData(request.query.username, (err, data) => {
       if (err) throw err;
       const messages = data.map(msg => msg)
-      response.render('messages', {data: messages})
-      return
+      return response.render('messages', {
+        data: messages
+      })
+
+    })
+  } else {
+    database.getAllMessageData((err, data) => {
+      if (err) throw err;
+      const messages = data.map(msg => msg)
+      return response.render('messages', {
+        data: messages
+      })
     })
   }
-  database.getAllMessageData((err, data) => {
-    if (err) throw err;
-    const messages = data.map(msg => msg)
-    response.render('messages', {data: messages})
-  })
 })
 
 app.listen(3000, () => {

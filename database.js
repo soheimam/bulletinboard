@@ -106,7 +106,7 @@ function postUserData(username, email, password, callback) {
       callback(null, data)
     })
     .catch(err => {
-      callback(error, null)
+      callback(err, null)
     })
 }
 module.exports = {
